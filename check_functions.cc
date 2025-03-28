@@ -66,8 +66,8 @@ bool ValidateNumber (const std::string& line) {
  * @brief Prints Help to the user
  */
 void Help () {
-    std::cout << "./p03_big_calculator -- Calculator that works in bases 2, 8, 10 and 16 with unsigned, integers and rationals\n"
-              << "Usage:                ./p04_hash_program [--help | -h] [-ts <s>] [-fd <f>] [-hash <open|close>] [-bs <s] [-fe <f>]\n"
+    std::cout << "./p05_hash_program [--help | -h] [-ts <s>] [-fd <f>] [-hash <open|close>] [-bs <s] [-fe <f>] [-size <s>] [-ord <m>] [-init <i> [f]] [-trace <y|n>] -- //FILL LATER\n"
+              << "Usage:                ./p04_hash_program [--help | -h] [-ts <s>] [-fd <f>] [-hash <open|close>] [-bs <s] [-fe <f>] [-size <s>] [-ord <m>] [-init <i> [f]] [-trace <y|n>]\n"
               << "    [--help | -h]:       Optional argument. Prints this help\n"
               << "    [-ts <s>]:           Optional argument. Initializes a hash table with the size specified by <s>, positive number greater than 0. Default table size is 1000\n"
               << "    [-fd <f>]:           Optional argument: Specifies with <f> the distribution function to be used in the hash table (module function as default). Its codes are as follows:\n"
@@ -80,7 +80,20 @@ void Help () {
               << "                              - 0: Linear exploration\n"
               << "                              - 1: Quadratic exploration\n"
               << "                              - 2: Double Dispersion\n"
-              << "                              - 3: Redispersion\n";
+              << "                              - 3: Redispersion\n"
+              << "    [-size <s>]:         Optional argument: Initializes the size of the sequence to be sorted (10 as default) with the size specified by <s>, natural number greater than zero.\n"
+              << "    [-ord <m>]:          Optional argument: Specifies with <m> the sort function to be used in the sequence (insertion method as default) in a close table hash. Its codes are as follows:\n"
+              << "                              - 0: Insertion sort method\n"
+              << "                              - 1: Shaker sort method\n"
+              << "                              - 2: QuickSort method\n"
+              << "                              - 3: HeapSort method\n"
+              << "                              - 4: ShellSort method. Adds to the menu an option to select alpha between 0 and 1\n"
+              << "    [-init <i>]:          Optional argument: Specifies with <i> the way data will be introduced:\n"
+              << "                              - manual: Introduces manually the <s> number of elements of the sequence\n"
+              << "                              - random: Introduces randomly the <s> number of elements of the sequence\n"
+              << "                              - file [f]: Introduces the <s> from a file which name is specified with <f>, mandatory field\n"
+              << "    [-trace <y|n>] Optional argument: If used with <y>, the program will print the trace of the selected sort method. If <n>, this funcitonality will be deactivated\n";
+
 }
 
 
@@ -88,8 +101,8 @@ void Help () {
  * @brief Prints how to use the program
  */
 void Usage() {
-  std::cout << "How to use: ./p04_hash_program [--help | -h] [-ts <s>] [-fd <f>] [-hash <open|close>] [-bs <s] [-fe <f>]\n"
-            << "Try './p04_hash_program [--help | -h]' for further information\n";
+  std::cout << "How to use: ./p05_hash_program [--help | -h] [-ts <s>] [-fd <f>] [-hash <open|close>] [-bs <s] [-fe <f>] [-size <s>] [-ord <m>] [-init <i> [f]] [-trace <y|n>]\n"
+            << "Try './p05_hash_program [--help | -h]' for further information\n";
 }
 
 

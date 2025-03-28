@@ -51,7 +51,7 @@ struct program_options {
  int exploration_function = 0; // Linear function as default
  int open_close_hash = 0; // close hash (static sequence) as default
  int block_size = 1; // block size 1 as default
- int sequence_size = 1; // sequence size 1 as default
+ int sequence_size = 10; // sequence size 1 as default
  int ordenation_function = 0; // Insertion method as default
  int mode = 0; // Manual mode as default
  int trace = 0; // No trace as default

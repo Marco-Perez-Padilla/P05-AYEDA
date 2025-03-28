@@ -20,6 +20,7 @@
 **      24/03/2025 - Adicion funcion para manejar errores del comando
 **      27/03/2025 - Adicion de errores relacionados con metodos de ordenacion
 **      28/03/2025 - Adicion de mensajes de error para errores de argumentos nuevos
+**      28/03/2025 - Adicion de menu para la funcion de ordenacion ShellSort
 **/
 
 #include <iostream>
@@ -297,6 +298,20 @@ void menu (char &opcion) {
  std::cout << "q. [q]uit program" << std::endl;
  std::cout << "Introduce the action to execute  > ";
  std::cin >> opcion;
+};
+
+
+/**
+* @brief Start menu to choose an option of the following
+* @param char option to be used
+*/
+void ShellSortMenu (char &opcion) {
+  std::cout << "i. [i]nsert new NIF, number with 8 digits" << std::endl;     
+  std::cout << "s. [s]earch a specified NIF in the table hash" << std::endl;
+  std::cout << "a. Select [a]lpha value, between 0 and 1" << std::endl;         
+  std::cout << "q. [q]uit program" << std::endl;
+  std::cout << "Introduce the action to execute  > ";
+  std::cin >> opcion;
 };
 
 

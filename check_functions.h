@@ -28,6 +28,7 @@
 
 // Enum of errors in arguments
 enum class parse_args_errors {
+ missing_argument,
  table_size_error,
  dispersion_function_error,
  exploration_function_error,

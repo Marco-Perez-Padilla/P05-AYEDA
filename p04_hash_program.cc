@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
     }
     HashTable<NIF, StaticSequence<NIF>> closed_table(table_size, *fd, *fe, block_size);
     char option;
-    clrscr();
+    
     std::cout << "Welcome to the menu. Here you can insert or search a NIF in the specified hash table" << std::endl;
     std::cout << "Press any key to continue..." << std::endl;
     pressanykey();

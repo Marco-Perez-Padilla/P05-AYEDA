@@ -19,6 +19,7 @@
 **      23/03/2025 - Adicion funcion para manejar opciones del comando
 **      24/03/2025 - Adicion funcion para manejar errores del comando
 **      27/03/2025 - Adicion de errores relacionados con metodos de ordenacion
+**      28/03/2025 - Adicion de mensajes de error para errores de argumentos nuevos
 **/
 
 #include <iostream>
@@ -141,7 +142,7 @@ std::expected<program_options, parse_args_errors> parse_args(int argc, char* arg
       mode = true;
       continue;
     } else if (*it == "-trace") {
-      trace = true:
+      trace = true;
       continue;
     } else if (table_size == true) {
       table_size = false;
@@ -222,7 +223,7 @@ std::expected<program_options, parse_args_errors> parse_args(int argc, char* arg
       } else {
         return std::unexpected(parse_args_errors::mode_error);
       }
-    } else if (file == true) {
+    } else if (!it->starts_with("-") && file == true) {
       file = false;
       std::string file_name = std::string(*it);
       if (file_name.empty()) {
@@ -232,9 +233,9 @@ std::expected<program_options, parse_args_errors> parse_args(int argc, char* arg
       }
     } else if (trace == true) {
       trace = false;
-      if (std::string(*it) == "yes") {
+      if (std::string(*it) == "y") {
         options.open_close_hash = 1;
-      } else if (std::string(*it) == "no"){
+      } else if (std::string(*it) == "n"){
         options.open_close_hash = 0;
       } else {
         return std::unexpected(parse_args_errors::trace_error);
@@ -242,6 +243,10 @@ std::expected<program_options, parse_args_errors> parse_args(int argc, char* arg
     } else {
       return std::unexpected(parse_args_errors::unknown_option); 
     }
+  }
+
+  if (file == true && options.file.empty()) {
+    return std::unexpected(parse_args_errors::missing_argument);
   }
 
   return options; 
@@ -301,6 +306,18 @@ bool ProcessArgsErrors(const std::expected<program_options, parse_args_errors>& 
       std::cerr << "fatal error: Dispersion function code must be 0, 1, 2 or 3" << std::endl;
     } else if (options.error() == parse_args_errors::hash_error) {
       std::cerr << "fatal error: Hash code must be 'open' or 'close'" << std::endl;
+    } else if (options.error() == parse_args_errors::sequence_size_error) {
+      std::cerr << "fatal error: Sequence size, it must be a non negative number superior than 0" << std::endl;
+    } else if (options.error() == parse_args_errors::ordenation_function_error) {
+      std::cerr << "fatal error: Ordenation function code must be 0, 1, 2, 3 or 4" << std::endl;
+    } else if (options.error() == parse_args_errors::mode_error) {
+      std::cerr << "fatal error: Specified insertion mode must be 'manual' or 'random' or 'file'" << std::endl;
+    } else if (options.error() == parse_args_errors::file_error) {
+      std::cerr << "fatal error: Insertion mode file selected. It must be followed by a file name not empty" << std::endl; 
+    } else if (options.error() == parse_args_errors::trace_error) {
+      std::cerr << "fatal error: Trace must be specified with 'y' or 'n'" << std::endl;
+    } else if (options.error() == parse_args_errors::missing_argument) {
+      std::cerr << "fatal error. Missing argument after file insertions mode selected" << std::endl;
     }
     Usage();
     return 0;

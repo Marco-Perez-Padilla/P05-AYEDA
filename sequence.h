@@ -18,6 +18,7 @@
 **      22/03/2025 - Creacion (primera version) del codigo
 **      23/03/2025 - Creación de sub-clases dinamica y estatica
 **      23/03/2025 - Adicion comprobacion block size no 0
+**      28/03/2025 - Adicion sobrecarga metodo []
 **/
 
 #ifndef SEQUENCE_H
@@ -39,6 +40,7 @@ template <class Key> class Sequence {
   virtual ~Sequence() {}
   virtual bool search(const Key&) const = 0;
   virtual bool insert(const Key&) = 0;
+  virtual Key operator[](const unsigned int) const = 0;
 };
  
 
@@ -53,6 +55,8 @@ template<class Key> class DynamicSequence : public Sequence<Key> {
   // Search and insert methods
   bool search(const Key&) const override;
   bool insert(const Key&) override;
+  // [] overload 
+  Key operator[](const unsigned int) const override;
 };
 
 
@@ -88,6 +92,21 @@ template<class Key> bool DynamicSequence<Key>::insert(const Key& key) {
 
 
 /**
+ * @brief Overload of [] operator to access an element on the sequence
+ * @param Position of the element to be acceded
+ * @return Key element at the given position
+ */
+template <class Key> Key DynamicSequence<Key>::operator[](const unsigned int position) const {
+  if (position >= values_.size()) {
+    throw WrongPosition();
+  }
+  auto it = values_.begin();
+  std::advance(it, position);
+  return *it;
+}
+
+
+/**
  * @brief Sub-class that specializes the static sequence in a hash table
  * @param Key class to be interpreted as a Key for the hashes
  */
@@ -101,11 +120,16 @@ template <class Key> class StaticSequence : public Sequence<Key> {
   explicit StaticSequence(unsigned);
   // Destructor
   ~StaticSequence();
+  // Getter
+  const unsigned getSize() {return size_;}
   // full method
   virtual bool isFull() const;
   // Search and insert methods
   bool search(const Key&) const override;
   bool insert(const Key&) override;
+  // [] overload 
+  Key operator[](const unsigned int) const override;
+  Key& operator[](const unsigned int);
 };
 
 
@@ -169,6 +193,27 @@ template <class Key> bool StaticSequence<Key>::insert(const Key& key) {
     ++size_;
     return true;
   }
+}
+
+
+/**
+ * @brief Overload of [] operator to access an element on the sequence
+ * @param Position of the element to be acceded
+ * @return Key element at the given position
+ */
+template <class Key> Key StaticSequence<Key>::operator[](const unsigned int position) const {
+  if (position >= block_size_) {
+    throw WrongPosition();
+  }
+  return values_[position];
+}
+
+
+template <class Key> Key& StaticSequence<Key>::operator[](const unsigned int position) {
+  if (position >= block_size_) {
+    throw WrongPosition();
+  }
+  return values_[position];
 }
 
 

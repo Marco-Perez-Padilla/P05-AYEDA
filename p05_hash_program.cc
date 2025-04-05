@@ -23,16 +23,17 @@
 **/
 
 #include <iostream>
+#include <fstream>
 
 #include "check_functions.h"
 #include "nif.h"
 #include "hash.h"
 #include "dispersion.h"
 #include "exploration.h"
+#include "ordenation.h"
 
 
 int main(int argc, char* argv[]) {
-
   auto options = parse_args(argc,argv);
 
   bool errors = ProcessArgsErrors(options);
@@ -47,11 +48,16 @@ int main(int argc, char* argv[]) {
 
   // Getting the values given by the user in command line
   const unsigned table_size = options.value().table_size;
-  const unsigned block_size = options.value().block_size;
+  const unsigned sequence_size = options.value().sequence_size;
   const unsigned fd_option = options.value().dispersion_function;
   const unsigned fe_option = options.value().exploration_function;
   const unsigned close_option = options.value().open_close_hash;
-  
+  const unsigned sm_option = options.value().ordenation_function;
+  const unsigned int_option = options.value().mode;
+  const std::string file_name = options.value().file;
+  const unsigned trace_option = options.value().trace;
+  double alpha = 0.5;
+
   // Process Dispersion Function
   DispersionFunction<NIF>* fd = nullptr;
   if (fd_option == 0) {
@@ -75,7 +81,8 @@ int main(int argc, char* argv[]) {
     } else if (fe_option == 3) {
       fe = new RedispersionExploration<NIF>(table_size);
     }
-    HashTable<NIF, StaticSequence<NIF>> closed_table(table_size, *fd, *fe, block_size);
+    HashTable<NIF, StaticSequence<NIF>> closed_table(table_size, *fd, *fe, sequence_size);
+    
     char option;
     
     std::cout << "Welcome to the menu. Here you can insert or search a NIF in the specified hash table" << std::endl;
@@ -123,6 +130,63 @@ int main(int argc, char* argv[]) {
           }
           std::cout << "Press any key to continue..." << std::endl;
           pressanykey();
+        break;
+
+        case 'o':
+          clrscr();
+          std::cout << "You have entered sort mode. Press 'q' to exit this mode and go back to general menu" << std::endl;
+          char new_option;
+
+          do {
+            StaticSequence<NIF> sequence(sequence_size);
+            if (int_option == 0) {
+              for (unsigned i = 0; i < sequence_size; ++i) {
+                long nif;
+                std::cout << "Introduce NIF #" << (i + 1) << ": ";
+                std::cin >> nif;
+                sequence.insert(NIF(nif));
+              }
+            } else if (int_option == 1) {
+              for (unsigned i = 0; i < sequence_size; ++i) {
+                sequence.insert(NIF());  
+              }
+            } else if (int_option == 2) {
+              std::ifstream file(file_name);
+              std::string str;
+              while (file >> str && sequence.getSize() < sequence_size) {
+                sequence.insert(NIF(str));
+              }
+            }
+
+            // 3. Instanciar el algoritmo de ordenación según -ord
+            SortMethod<NIF>* sm = nullptr;
+            if (sm_option == 0) {
+              sm = new InsertionSortMethod<NIF>(sequence, sequence_size, trace_option);
+            } else if (sm_option == 1) {
+              sm = new ShakeSortMethod<NIF>(sequence, sequence_size, trace_option);
+            } else if (sm_option == 2) {
+              sm = new QuickSortMethod<NIF>(sequence, sequence_size, trace_option);
+            } else if (sm_option == 3) {
+              sm = new HeapSortMethod<NIF>(sequence, sequence_size, trace_option);
+            } else if (sm_option == 4) {
+              std::cout << "Please, insert an alpha value between 0 and 1" << std::endl;
+              std::cin >> alpha;
+              sm = new ShellSortMethod<NIF>(sequence, sequence_size, alpha, trace_option);
+            }
+
+            // 4. Ejecutar el algoritmo
+            if (sm) {
+              sm->Sort();
+              std::cout << "Sorted sequence:\n";
+              for (unsigned i = 0; i < sequence_size; ++i) {
+                std::cout << sequence[i] << "\n";
+              }
+              delete sm;
+            }
+
+            std::cout << "Introduce q to quit. Any other option to enter a new sequence  > ";
+            std::cin >> new_option;
+          } while (new_option != 'q');
         break;
       }
     } while (option != 'q');

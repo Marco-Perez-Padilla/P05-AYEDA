@@ -76,7 +76,6 @@ void Help () {
               << "                              - 1: Sum function\n"
               << "                              - 2: Pseudo-random function\n"
               << "    [-hash <open|close>] Optional argument: If used with <open>, hash table with use dynamic sequence. If <close> specified, static sequence (hash table will use static sequence by default as well) \n"
-              << "    [-bs <s>]:           Optional argument. Initializes the blocks of the hash table with the size specified by <s>, positive number greater than 0. Default block size is 1\n"
               << "    [-fe <f>]:           Optional argument: Specifies with <f> the exploration function to be used in the hash table (linear exploration as default) in a close table hash. Its codes are as follows:\n"
               << "                              - 0: Linear exploration\n"
               << "                              - 1: Quadratic exploration\n"
@@ -198,13 +197,6 @@ std::expected<program_options, parse_args_errors> parse_args(int argc, char* arg
       } else {
         return std::unexpected(parse_args_errors::hash_error);
       }
-    } else if (block_size == true) {
-      block_size = false;
-      if (ValidateNumber(std::string(*it)) && std::stoi(std::string(*it)) > 0) {
-        options.block_size = std::stoi(std::string(*it));
-      } else {
-        return std::unexpected(parse_args_errors::block_size_error);
-      }
     } else if (sequence_size == true) {
       sequence_size = false;
       if (ValidateNumber(std::string(*it)) && std::stoi(std::string(*it)) > 0) {
@@ -248,9 +240,9 @@ std::expected<program_options, parse_args_errors> parse_args(int argc, char* arg
     } else if (trace == true) {
       trace = false;
       if (std::string(*it) == "y") {
-        options.open_close_hash = 1;
+        options.trace = 1;
       } else if (std::string(*it) == "n"){
-        options.open_close_hash = 0;
+        options.trace = 0;
       } else {
         return std::unexpected(parse_args_errors::trace_error);
       }
@@ -294,24 +286,11 @@ void clrscr() {
 */
 void menu (char &opcion) {
  std::cout << "i. [i]nsert new NIF, number with 8 digits" << std::endl;     
- std::cout << "s. [s]earch a specified NIF in the table hash" << std::endl;         
+ std::cout << "s. [s]earch a specified NIF in the table hash" << std::endl;
+ std::cout << "o. Enter [o]rdenation mode" << std::endl;        
  std::cout << "q. [q]uit program" << std::endl;
  std::cout << "Introduce the action to execute  > ";
  std::cin >> opcion;
-};
-
-
-/**
-* @brief Start menu to choose an option of the following
-* @param char option to be used
-*/
-void ShellSortMenu (char &opcion) {
-  std::cout << "i. [i]nsert new NIF, number with 8 digits" << std::endl;     
-  std::cout << "s. [s]earch a specified NIF in the table hash" << std::endl;
-  std::cout << "a. Select [a]lpha value, between 0 and 1" << std::endl;         
-  std::cout << "q. [q]uit program" << std::endl;
-  std::cout << "Introduce the action to execute  > ";
-  std::cin >> opcion;
 };
 
 

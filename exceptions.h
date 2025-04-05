@@ -74,4 +74,14 @@ class ClosedInsertException : public Exceptions {
 };
 
 
+
+/**
+ * @brief Class ClosedInsertException. Throws an exception if a key couldn't be inserted on a hash table
+ */
+class WrongPosition : public Exceptions {
+ public:
+ WrongPosition() : Exceptions("Error: Position can't be greater or equal than the block size") {}
+};
+
+
 #endif

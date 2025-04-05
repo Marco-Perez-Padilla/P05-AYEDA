@@ -53,50 +53,53 @@ template <class Key> void InsertionSort(StaticSequence<Key>& sequence, unsigned 
 
 
 template <class Key> void ShakeSort(StaticSequence<Key>& sequence, unsigned size, bool trace = false) {
-  unsigned ini = 0; 
-  unsigned fin = size - 1 ; 
-  unsigned cam = size;
+  unsigned left = 0;
+  unsigned right = size - 1;
+  unsigned lastSwap; 
   unsigned iteration = 0;
   
-  while (ini < fin) {
-    for (int j = fin; j > ini; j--) {
-      if (sequence[j] < sequence[j-1]) {
-        std::swap(sequence[j-1],sequence[j]);
-        cam = j ;
-      } 
+  while (left < right) {
+    // Pasada hacia adelante: mover el elemento mayor al final.
+    lastSwap = left;
+    for (unsigned j = left; j < right; j++) {
+      if (sequence[j] > sequence[j + 1]) {
+        std::swap(sequence[j], sequence[j + 1]);
+        lastSwap = j;
+      }
     }
-
-    ini = cam + 1 ;
-
+    right = lastSwap;
+    
     if (trace) {
       iteration++;
-      std::cout << "First step in interation " << iteration << ": ";
+      std::cout << "Iteration " << iteration << " (first step): ";
       for (unsigned k = 0; k < size; k++) {
         std::cout << sequence[k] << " ";
       }
       std::cout << std::endl;
     }
-
-    for (int j = ini; j <= fin; j++) {
-      if (sequence[j] < sequence[j-1]) {
-        std::swap(sequence[j-1],sequence[j]) ;
-        cam = j;
-      } 
+    
+    // Pasada hacia atrás: mover el elemento menor al principio.
+    lastSwap = right;
+    for (unsigned j = right; j > left; j--) {
+      if (sequence[j - 1] > sequence[j]) {
+        std::swap(sequence[j - 1], sequence[j]);
+        lastSwap = j;
+      }
     }
-
-    fin = cam;
-
+    left = lastSwap;
+    
     if (trace) {
-      std::cout << "Second step in iteration " << iteration << ": ";
+      std::cout << "Iteration " << iteration << " (second step): ";
       for (unsigned k = 0; k < size; k++) {
         std::cout << sequence[k] << " ";
       }
       std::cout << std::endl;
     }
-
-    ++iteration;
-  } 
+    
+    iteration++;
+  }
 }
+
 
 
 template <class Key> void RecursiveQuickSort(StaticSequence<Key>& sequence, int ini, int fin, bool trace = false, unsigned int& iteration = 0) {
@@ -142,14 +145,11 @@ template <class Key> void QuickSort(StaticSequence<Key>& sequence, unsigned size
 
 template <class Key> void HeapSort(StaticSequence<Key>& sequence, unsigned size, bool trace = false) {
   for (int i = (size/2) - 1; i >= 0; i--) {
-    if (trace) {
-      std::cout << "First step after " << i << " iteration:" << std::endl;
-    }
     baja(i, sequence, size);
   }
   for (int i = size -1; i > 0; i--) {
     if (trace) {
-      std::cout << "Second step after " << i << " iteration:" << std::endl;
+      std::cout << "Heap after " << i << " iteration:" << std::endl;
     }
     std::swap(sequence[0], sequence[i]);
     baja(0, sequence, i, trace);

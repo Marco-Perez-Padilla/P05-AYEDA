@@ -20,6 +20,7 @@
 **      23/03/2025 - Primera version funcional. Instanciacion de las plantillas
 **      23/03/2025 - Creacion del menu
 **      24/03/2025 - Adicion manejo de errores
+**      05/04/2025 - Adaptacion del programa cliente a metodos de ordenacion
 **/
 
 #include <iostream>
@@ -158,7 +159,6 @@ int main(int argc, char* argv[]) {
               }
             }
 
-            // 3. Instanciar el algoritmo de ordenación según -ord
             SortMethod<NIF>* sm = nullptr;
             if (sm_option == 0) {
               sm = new InsertionSortMethod<NIF>(sequence, sequence_size, trace_option);
@@ -171,15 +171,20 @@ int main(int argc, char* argv[]) {
             } else if (sm_option == 4) {
               std::cout << "Please, insert an alpha value between 0 and 1" << std::endl;
               std::cin >> alpha;
+              while (alpha < 0 || alpha > 1) {
+                std::cout << "Error, alpha cannot be minor than 0 or greater than 1. Please insert a valid alpha: ";
+                std::cin >> alpha;
+              }
               sm = new ShellSortMethod<NIF>(sequence, sequence_size, alpha, trace_option);
             }
 
-            // 4. Ejecutar el algoritmo
             if (sm) {
               sm->Sort();
               std::cout << "Sorted sequence:\n";
               for (unsigned i = 0; i < sequence_size; ++i) {
-                std::cout << sequence[i] << "\n";
+                if (sequence[i] != NIF(-1)) {
+                  std::cout << sequence[i] << "\n";
+                }
               }
               delete sm;
             }

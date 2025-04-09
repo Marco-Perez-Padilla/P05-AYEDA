@@ -57,9 +57,6 @@ struct program_options {
  std::string file;
 };
  
-bool ValidateFile (const std::string& name);
-void CheckFileError (const std::string& name);
-void ValidateCommand(int argc, char* argv[]);
 bool ValidateNumber (const std::string& line);
 void Help ();
 void Usage();

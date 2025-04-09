@@ -7,18 +7,16 @@
 ** Practica 5: Algoritmos de ordenación
 ** Autor: Marco Pérez Padilla
 ** Correo: alu0101469348@ull.edu.es
-** Fecha: 22/03/2025
+** Fecha: 31/03/2025
 
-** Archivo sequence.h: Declaracion e implementacion de la plantilla para las secuencias estáticas y dinámicas
+** Archivo sequence.h: Declaracion e implementacion de funciones de ordenación
 **
 ** Referencias:
 **      Enlaces de interes
 
 ** Historial de revisiones:
-**      22/03/2025 - Creacion (primera version) del codigo
-**      23/03/2025 - Creación de sub-clases dinamica y estatica
-**      23/03/2025 - Adicion comprobacion block size no 0
-**      28/03/2025 - Adicion sobrecarga metodo []
+**      31/03/2025 - Creacion (primera version) del codigo
+**      02/04/2025 - 
 **/
 
 #ifndef ORDENATION_METHODS_H
@@ -28,6 +26,12 @@
 #include "sequence.h"
 
 
+/**
+ * @brief Function that sorts a given sequence using the insertion sort method
+ * @param StaticSequence sequence to be sorted
+ * @param unsigned size, size of the sequence
+ * @param bool trace. Indicates if the function must print the trace or not
+ */
 template <class Key> void InsertionSort(StaticSequence<Key>& sequence, unsigned size, bool trace = false) {
   for (unsigned i {1}; i < size; i++) {
     Key key = sequence[i];
@@ -38,7 +42,6 @@ template <class Key> void InsertionSort(StaticSequence<Key>& sequence, unsigned 
       j--;
     }
   
-
     sequence[j + 1] = key;
 
     if (trace) {
@@ -52,6 +55,12 @@ template <class Key> void InsertionSort(StaticSequence<Key>& sequence, unsigned 
 }
 
 
+/**
+ * @brief Function that sorts a given sequence using the shake sort method
+ * @param StaticSequence sequence to be sorted
+ * @param unsigned size, size of the sequence
+ * @param bool trace. Indicates if the function must print the trace or not
+ */
 template <class Key> void ShakeSort(StaticSequence<Key>& sequence, unsigned size, bool trace = false) {
   unsigned left = 0;
   unsigned right = size - 1;
@@ -59,7 +68,6 @@ template <class Key> void ShakeSort(StaticSequence<Key>& sequence, unsigned size
   unsigned iteration = 0;
   
   while (left < right) {
-    // Pasada hacia adelante: mover el elemento mayor al final.
     lastSwap = left;
     for (unsigned j = left; j < right; j++) {
       if (sequence[j] > sequence[j + 1]) {
@@ -78,7 +86,6 @@ template <class Key> void ShakeSort(StaticSequence<Key>& sequence, unsigned size
       std::cout << std::endl;
     }
     
-    // Pasada hacia atrás: mover el elemento menor al principio.
     lastSwap = right;
     for (unsigned j = right; j > left; j--) {
       if (sequence[j - 1] > sequence[j]) {
@@ -101,7 +108,25 @@ template <class Key> void ShakeSort(StaticSequence<Key>& sequence, unsigned size
 }
 
 
+/**
+ * @brief Function that invokes a recursive function to sort a sequence
+ * @param StaticSequence sequence to be sorted
+ * @param unsigned size, size of the sequence
+ * @param bool trace. Indicates if the function must print the trace or not
+ */
+template <class Key> void QuickSort(StaticSequence<Key>& sequence, unsigned size, bool trace = false) {
+  unsigned int iteration = 0;
+  RecursiveQuickSort(sequence, 0, size - 1, trace, iteration);
+}
 
+
+/**
+ * @brief Function that sorts a given sequence using the quick sort method
+ * @param StaticSequence sequence to be sorted
+ * @param int initial position 
+ * @param int last position
+ * @param bool trace. Indicates if the function must print the trace or not
+ */
 template <class Key> void RecursiveQuickSort(StaticSequence<Key>& sequence, int ini, int fin, bool trace = false, unsigned int& iteration = 0) {
   if (ini >= fin) {
     return;  
@@ -136,13 +161,12 @@ template <class Key> void RecursiveQuickSort(StaticSequence<Key>& sequence, int 
 }
 
 
-// Wrapper function
-template <class Key> void QuickSort(StaticSequence<Key>& sequence, unsigned size, bool trace = false) {
-  unsigned int iteration = 0;
-  RecursiveQuickSort(sequence, 0, size - 1, trace, iteration);
-}
-
-
+/**
+ * @brief Function that invokes an auxiliar function to help sorting a sequence
+ * @param StaticSequence sequence to be sorted
+ * @param unsigned size, size of the sequence
+ * @param bool trace. Indicates if the function must print the trace or not
+ */
 template <class Key> void HeapSort(StaticSequence<Key>& sequence, unsigned size, bool trace = false) {
   for (int i = (size/2) - 1; i >= 0; i--) {
     baja(i, sequence, size);
@@ -157,6 +181,13 @@ template <class Key> void HeapSort(StaticSequence<Key>& sequence, unsigned size,
 }
 
 
+/**
+ * @brief Auxiliar function to heapify the sequence
+ * @param int i iteration
+ * @param StaticSequence sequence to be sorted
+ * @param int size of the heap
+ * @param bool trace. Indicates if the function must print the trace or not
+ */
 template <class Key> void baja(int i, StaticSequence<Key>& sequence, int heap_size, bool trace = false) {
   while (true) {
     int left = 2*i + 1;  
@@ -187,7 +218,14 @@ template <class Key> void baja(int i, StaticSequence<Key>& sequence, int heap_si
 }
 
 
-template <class Key> void ShellSort(StaticSequence<Key>& sequence, unsigned size, float alpha, bool trace = false) {
+/**
+ * @brief Function that sorts a given sequence using the shake sort method
+ * @param StaticSequence sequence to be sorted
+ * @param unsigned size, size of the sequence
+ * @param double alpha, variable between 0 and 1
+ * @param bool trace. Indicates if the function must print the trace or not
+ */
+template <class Key> void ShellSort(StaticSequence<Key>& sequence, unsigned size, double alpha, bool trace = false) {
   int delta = size;
   while (delta > 1) {
     delta = static_cast<int>(delta * alpha);
@@ -206,14 +244,14 @@ template <class Key> void ShellSort(StaticSequence<Key>& sequence, unsigned size
         j -= delta;
 
         if (trace) {
-          std::cout << "  Movido " << sequence[j] << " de pos " << j << " a " << j + delta << "\n";
+          std::cout << "  Swapped " << sequence[j] << " from " << j << " to " << j + delta << "\n";
         }
       }
       sequence[j] = temp;
     }
 
     if (trace) {
-      std::cout << "Estado actual: ";
+      std::cout << "Current state: ";
       for (unsigned k = 0; k < size; ++k) {
         std::cout << sequence[k] << " ";
       }

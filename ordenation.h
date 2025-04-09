@@ -7,18 +7,15 @@
 ** Practica 5: Algoritmos de ordenación
 ** Autor: Marco Pérez Padilla
 ** Correo: alu0101469348@ull.edu.es
-** Fecha: 22/03/2025
+** Fecha: 31/03/2025
 
-** Archivo sequence.h: Declaracion e implementacion de la plantilla para las secuencias estáticas y dinámicas
+** Archivo ordenation.h: Declaracion e implementacion de las plantillas para métodos de ordenación
 **
 ** Referencias:
 **      Enlaces de interes
 
 ** Historial de revisiones:
-**      22/03/2025 - Creacion (primera version) del codigo
-**      23/03/2025 - Creación de sub-clases dinamica y estatica
-**      23/03/2025 - Adicion comprobacion block size no 0
-**      28/03/2025 - Adicion sobrecarga metodo []
+**      31/03/2025 - Creacion (primera version) del codigo
 **/
 
 #ifndef ORDENATION_H
@@ -28,6 +25,9 @@
 #include "sort_algorithms.h"
 
 
+/**
+ * @brief Abstract class for sorting methods
+ */
 template <typename Key> class SortMethod {
  protected:
   StaticSequence<Key>& sequence_;
@@ -41,6 +41,9 @@ template <typename Key> class SortMethod {
 };
 
 
+/**
+ * @brief Sub-class for insertion sort method
+ */
 template <typename Key> class InsertionSortMethod : public SortMethod<Key> {
  public:
   InsertionSortMethod(StaticSequence<Key>& sequence, unsigned size, bool trace = false) : SortMethod<Key>(sequence, size, trace) {}
@@ -50,6 +53,9 @@ template <typename Key> class InsertionSortMethod : public SortMethod<Key> {
 };
 
 
+/**
+ * @brief Sub-class for shake sort method
+ */
 template <typename Key> class ShakeSortMethod : public SortMethod<Key> {
  public:
   ShakeSortMethod(StaticSequence<Key>& sequence, unsigned size, bool trace = false) : SortMethod<Key>(sequence, size, trace) {}
@@ -59,6 +65,9 @@ template <typename Key> class ShakeSortMethod : public SortMethod<Key> {
 };
 
 
+/**
+ * @brief Sub-class for quick sort method
+ */
 template <typename Key> class QuickSortMethod : public SortMethod<Key> {
  public:
   QuickSortMethod(StaticSequence<Key>& sequence, unsigned size, bool trace = false) : SortMethod<Key>(sequence, size, trace) {}
@@ -68,6 +77,9 @@ template <typename Key> class QuickSortMethod : public SortMethod<Key> {
 };
 
 
+/**
+ * @brief Sub-class for heap sort method
+ */
 template <typename Key> class HeapSortMethod : public SortMethod<Key> {
  public:
   HeapSortMethod(StaticSequence<Key>& sequence, unsigned size, bool trace = false) : SortMethod<Key>(sequence, size, trace) {}
@@ -77,6 +89,9 @@ template <typename Key> class HeapSortMethod : public SortMethod<Key> {
 };
 
 
+/**
+ * @brief Sub-class for shell sort method
+ */
 template <typename Key> class ShellSortMethod : public SortMethod<Key> {
  private:
   double alpha_;
